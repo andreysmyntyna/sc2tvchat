@@ -1,0 +1,51 @@
+/*SC2TV.RU chat extension utility*/
+/*Copyright (C) 2012  Andrey Smyntyna <andreysmyntyna@gmail.com>*/
+
+/*This program is free software: you can redistribute it and/or modify*/
+/*it under the terms of the GNU General Public License as published by*/
+/*the Free Software Foundation, either version 3 of the License, or*/
+/*(at your option) any later version.*/
+
+/*This program is distributed in the hope that it will be useful,*/
+/*but WITHOUT ANY WARRANTY; without even the implied warranty of*/
+/*MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the*/
+/*GNU General Public License for more details.*/
+
+/*You should have received a copy of the GNU General Public License*/
+/*along with this program.  If not, see <http://www.gnu.org/licenses/>*/
+
+.main-frame *
+{
+  box-sizing:content-box !important;
+}
+
+#gamenav
+{
+  font: 11px Tahoma,Arial,sans-serif !important;
+}
+
+body
+{
+  font: 11px Tahoma,Arial,sans-serif !important;
+  color: black !important;
+}
+
+.chat-window-icon
+{
+    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/icon16.png') !important;
+}
+
+.tl-menu-icon
+{
+    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/tl_favicon.ico') !important;
+}
+
+.vk-menu-icon
+{
+    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/vk16.png') !important;
+}
+
+.chat_plus-menu-icon
+{
+    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/icon16.png') !important;
+}
