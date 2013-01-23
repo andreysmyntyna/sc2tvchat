@@ -14,6 +14,8 @@
 /*You should have received a copy of the GNU General Public License*/
 /*along with this program.  If not, see <http://www.gnu.org/licenses/>*/
 
+
+/* .main-frame, #gamenav, body - исправление вёрстки страницы вследствие подключения стилей ExtJS*/
 .main-frame *
 {
   box-sizing:content-box !important;
@@ -48,4 +50,30 @@ body
 .chat_plus-menu-icon
 {
     background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/icon16.png') !important;
+}
+
+/* Правила *.em_video - хак для правильного масштабирования встроенного видео при изменении размеров окна просмотра*/
+div.em_video
+{
+    position:relative;
+}
+
+img.em_video
+{
+    width: 100%;
+}
+
+object.em_video
+{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+embed.em_video
+{
+    width: 100%;
+    height: 100%;
 }

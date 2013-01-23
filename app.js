@@ -80,28 +80,28 @@ var info_tpl = new Ext.XTemplate(
         '<img style="width:100%;" src="{URL}">',
       '</tpl>',
       '<tpl if="this.youtube_message(Type)">',
-        '<div>',
-          '<object width="100%"  height="100%">',
+        '<div class="em_video">',
+          '<img class="em_video" src="chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/video_bg.png">',
+          '<object class="em_video">',
             '<param name="movie"',
             'value="https://www.youtube.com/v/{[this.youtube_video_id(values.URL)]}?version=3&autoplay=0"></param>',
             '<param name="allowScriptAccess" value="always"></param>',
-            '<embed src="https://www.youtube.com/v/{[this.youtube_video_id(values.URL)]}?version=3&autoplay=0"',
-            'type="application/x-shockwave-flash"',
-            'allowscriptaccess="always"',
-            'width="100%"  height="100%"></embed>',
+            '<embed class="em_video" src="https://www.youtube.com/v/{[this.youtube_video_id(values.URL)]}?version=3&autoplay=0"',
+            'type="application/x-shockwave-flash" allowscriptaccess="always">',
+            '</embed>',
           '</object>',
         '</div>',
       '</tpl>',
       '<tpl if="this.youtu_be_message(Type)">',
-        '<div>',
-          '<object width="100%" height="100%">',
+        '<div class="em_video">',
+          '<img class="em_video" src="chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/video_bg.png">',
+          '<object class="em_video">',
             '<param name="movie"',
             'value="https://www.youtube.com/v/{[this.youtube_video_id(values.URL)]}?version=3&autoplay=0"></param>',
             '<param name="allowScriptAccess" value="always"></param>',
-            '<embed src="https://www.youtube.com/v/{[this.youtu_be_video_id(values.URL)]}?version=3&autoplay=0"',
-            'type="application/x-shockwave-flash"',
-            'allowscriptaccess="always"',
-            'width="100%"  height="100%"></embed>',
+            '<embed class="em_video" src="https://www.youtube.com/v/{[this.youtu_be_video_id(values.URL)]}?version=3&autoplay=0"',
+            'type="application/x-shockwave-flash" allowscriptaccess="always">',
+            '</embed>',
           '</object>',
         '</div>',
       '</tpl>',
@@ -181,14 +181,15 @@ Ext.define("SC2TVCHAT.view.Info",
 
             comp.tools =
             [
-//                {
-//                    type: 'left',
-//                    itemId: 'left_right',
-//                    qtip: 'Развернуть окно чата',
-//                    handler: function()
-//                    {
-//                    }
-//                }
+                {
+                    type: 'left',
+                    itemId: 'left_right',
+                    qtip: 'тест ссылки',
+                    handler: function()
+                    {
+                        process_link("http://www.youtube.com/watch?v=QB8b_Q7kreo",{name: "sintix"})
+                    }
+                }
             ];
             comp.callParent();
         }
@@ -212,14 +213,11 @@ function process_link(URL, chat_message)
     }
     else if (domain == "youtube.com")
     {
-       if(url("1",URL) == "watch")
-       {
-           var v = url('?v', URL);
-           if(v != "")
-           {
-               message_type = URL_TYPE_YOUTUBE;
-           }
-       }
+        var v = url('?v', URL);
+        if(v != "")
+        {
+          message_type = URL_TYPE_YOUTUBE;
+        }
     }
     else if (domain == "youtu.be")
     {

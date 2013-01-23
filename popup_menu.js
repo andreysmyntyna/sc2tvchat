@@ -24,5 +24,8 @@ $(document).ready(function()
     function()
     {
        $(this).removeClass("x-menu-item-active");
-    });
+    }).find("a").click(function()
+    {
+       window.open($(this).attr("href"), "_blank");
+    })
 });

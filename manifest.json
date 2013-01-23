@@ -55,6 +55,7 @@
         }
     ],
     "options_page": "options.html",
+    "homepage_url": "https://github.com/andreysmyntyna/sc2tvchat",
     "background_page": "background.html",
     "background":
     {
@@ -62,6 +63,7 @@
     },
     "web_accessible_resources":
     [
+        "images/video_bg.png",
         "popup_menu.js",
         "images/vk16.png",
         "images/tl_favicon.ico",

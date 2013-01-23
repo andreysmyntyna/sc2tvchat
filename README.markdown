@@ -29,3 +29,4 @@
 
 Библиотека JQuery [The jQuery Foundation](www.jquery.org)<br>
 Библиотека ExtJS [Sencha Inc.](http://www.sencha.com/products/extjs)
+Библиотека js-url [Websanova](https://github.com/websanova/js-url)
