@@ -8,24 +8,24 @@
 
 ## Возможности
 
-Какие видео ссылки поддерживаются?
-&nbsp;&nbsp;&nbsp;&nbsp;*Youtube: http://www.youtube.com/watch?v=fNl7YPB6PSw*
+Какие видео ссылки поддерживаются?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>Youtube: http://www.youtube.com/watch?v=fNl7YPB6PSw</i>
 
-Ссылки на изображения?
-&nbsp;&nbsp;&nbsp;&nbsp;*Любая прямая ссылка на изображение, 
-&nbsp;&nbsp;&nbsp;&nbsp;например: https://eu.battle.net/account/local-common/images/logos/blizz-bam.png
-&nbsp;&nbsp;&nbsp;&nbsp;За исключением, когда сервер по прямой ссылке отдаёт не само изображение
-&nbsp;&nbsp;&nbsp;&nbsp;а страницу предпросмотра.*
+Ссылки на изображения?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>Любая прямая ссылка на изображение,<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;например: https://eu.battle.net/account/local-common/images/logos/blizz-bam.png<br>
+&nbsp;&nbsp;&nbsp;&nbsp;За исключением, когда сервер по прямой ссылке отдаёт не само изображение<br>
+&nbsp;&nbsp;&nbsp;&nbsp;а страницу предпросмотра.</i><br>
 
-Всё остальное?
-&nbsp;&nbsp;&nbsp;&nbsp;*Все остальные ссылки будут показаны "как есть".*
+Всё остальное?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>Все остальные ссылки будут показаны "как есть".</i>
 
 ## Авторские права
-Шрифт "Starcraft" by [Neale Davidson](jaynz@pixelsagas.com)
-Набор иконок "7 Icons 5th + 3rd Party Pack" [www.tehkseven.net](www.tehkseven.net)
-Функция поиска URL в строке [Simon Williams](http://stackoverflow.com/questions/4504853/how-do-i-extract-a-url-from-plain-text-using-jquery)
-Генератор уникальных значений [John Millikin](http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript)
+Шрифт "Starcraft" by [Neale Davidson](jaynz@pixelsagas.com)<br>
+Набор иконок "7 Icons 5th + 3rd Party Pack" [www.tehkseven.net](www.tehkseven.net)<br>
+Функция поиска URL в строке [Simon Williams](http://stackoverflow.com/questions/4504853/how-do-i-extract-a-url-from-plain-text-using-jquery)<br>
+Генератор уникальных значений [John Millikin](http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript)<br>
 Функция для определения является ли URL изображением [jfriend00](http://stackoverflow.com/questions/9714525/javascript-image-url-verify)
 
-Библиотека JQuery [The jQuery Foundation](www.jquery.org)
+Библиотека JQuery [The jQuery Foundation](www.jquery.org)<br>
 Библиотека ExtJS [Sencha Inc.](http://www.sencha.com/products/extjs)
