@@ -153,13 +153,12 @@ Ext.define("SC2TVCHAT.view.Info",
     Ext.define("SC2TVCHAT.view.MainWindow",
     {
         extend: "Ext.window.Window",
-        x: 1153,
-        y: 197,
         width: 190,
         height: 500,
         layout: "fit",
         autoShow: true,
         title: "SC2TV CHAT+",
+        closable: false,
         iconCls: 'chat-window-icon',
         items:
             [
@@ -172,6 +171,14 @@ Ext.define("SC2TVCHAT.view.Info",
         {
             var comp = this;
 
+
+            var qtabs = $("#block-quicktabs-1");
+            var chat_lt = qtabs.offset();
+            var chat_width = qtabs.width();
+
+            comp.x = chat_lt.left + chat_width;
+            comp.y = chat_lt.top;
+
             comp.addListener('afterrender', function (sender, eOpts)
             {
                 ChatView = comp.queryById("chatview");
@@ -179,18 +186,18 @@ Ext.define("SC2TVCHAT.view.Info",
                 return true;
             });
 
-            comp.tools =
-            [
-                {
-                    type: 'left',
-                    itemId: 'left_right',
-                    qtip: 'тест ссылки',
-                    handler: function()
-                    {
-                        process_link("http://www.youtube.com/watch?v=QB8b_Q7kreo",{name: "sintix"})
-                    }
-                }
-            ];
+//            comp.tools =
+//            [
+//                {
+//                    type: 'left',
+//                    itemId: 'left_right',
+//                    qtip: 'тест ссылки',
+//                    handler: function()
+//                    {
+//                        //process_link("http://www.youtube.com/watch?v=QB8b_Q7kreo",{name: "sintix"});
+//                    }
+//                }
+//            ];
             comp.callParent();
         }
     });

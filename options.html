@@ -1,10 +1,132 @@
 <!DOCTYPE html>
+<!--SC2TV.RU chat extension utility-->
+<!--Copyright (C) 2012  Andrey Smyntyna <andreysmyntyna@gmail.com>-->
+
+<!--This program is free software: you can redistribute it and/or modify-->
+<!--it under the terms of the GNU General Public License as published by-->
+<!--the Free Software Foundation, either version 3 of the License, or-->
+<!--(at your option) any later version.-->
+
+<!--This program is distributed in the hope that it will be useful,-->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of-->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the-->
+<!--GNU General Public License for more details.-->
+
+<!--You should have received a copy of the GNU General Public License-->
+<!--along with this program.  If not, see <http://www.gnu.org/licenses/>-->
+
 <html>
   <meta charset="utf-8">
 <head>
-    <title>Опции</title>
+    <link rel="stylesheet" type="text/css" href="960grid.css">
+    <style>
+        @font-face
+        {
+            font-family: Starcraft;
+            src: url('Starcraft Normal.ttf');
+        }
+
+        html
+        {
+            height: 100%;
+        }
+
+        .container_12
+        {
+            background-color: white;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        .grid_12
+        {
+            height: 100%;
+        }
+
+        ul.faq
+        {
+            list-style-type: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        li.question
+        {
+
+        }
+
+        li.answer
+        {
+           margin-left: 1.25cm;
+           font-style: italic;
+        }
+
+        h1,h2,li,p
+        {
+            font-family: Arial;
+        }
+
+        h1,h2,p,li
+        {
+            margin-bottom: 4px;
+            margin-top: 4px;
+        }
+
+        body
+        {
+            height: 100%;
+            min-height: 100%;
+            background: url(images/bg-global-01.08.2012.jpg) no-repeat 50% 0;
+        }
+    </style>
+    <title>Информация о расширении</title>
 </head>
 <body>
-Описание расширения
+<div class="container_12">
+    <div class="grid_12">
+        <h1 style="font-family: Starcraft;"><span style="color:#0064a2;">SC2TV.RU</span> <span style="color:#ff8e21;">CHAT+</span></h1>
+        <p>
+           Расширение чата SC2TV для показа перепостов изображений, видео и ссылок на сайты.
+           Приложение выполнено в виде расширения для браузера Chrome и представляет собой
+           дополнительное окно, в котором показаны изображения и видео, ссылки на которые публикуют
+           пользователи чата. <a href="http://sc2tv.ru">Смотреть трансляции освещаемых порталом
+           киберспортивных событий становится значительно увлекательней.</a>
+        </p>
+        <h2>Возможности</h2>
+        <p>
+            <ul class="faq">
+              <li class="question">Какие видео ссылки поддерживаются?</li>
+              <li class="answer">Youtube: http://www.youtube.com/watch?v=fNl7YPB6PSw</li>
+              <li class="answer">или короткие ссылки вида: http://youtu.be/rgyL08nhtk</li>
+              <li class="question">Ссылки на изображения?</li>
+              <li class="answer">Любая прямая ссылка на изображение,
+                  например: https://eu.battle.net/account/local-common/images/logos/blizz-bam.png
+                  За исключением, когда сервер по прямой ссылке отдаёт не само изображение
+                  а страницу предпросмотра.</li>
+              <li class="question">Всё остальное?</li>
+              <li class="answer">Все остальные ссылки будут показаны "как есть".</li>
+            </ul>
+        </p>
+        <h2>Авторские права</h2>
+        <p>
+           Шрифт "Starcraft" by Neale Davidson <a href="mailto:jaynz@pixelsagas.com">jaynz@pixelsagas.com</a><br>
+           Набор иконок "7 Icons 5th + 3rd Party Pack" <a href="www.tehkseven.net">www.tehkseven.net</a><br>
+           Фоновое изображение <a href="http://sc2tv.ru">SC2TV.RU</a><br>
+           Функция поиска URL в строке <a href="http://stackoverflow.com/questions/4504853/how-do-i-extract-a-url-from-plain-text-using-jquery">Simon Williams</a><br>
+           Генератор уникальных значений <a href="http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript">John Millikin</a><br>
+           Функция для определения является ли URL изображением <a href="http://stackoverflow.com/questions/9714525/javascript-image-url-verify">jfriend00</a><br>
+
+           Библиотека JQuery <a href="www.jquery.org">The jQuery Foundation</a><br>
+           Библиотека ExtJS <a href="http://www.sencha.com/products/extjs">Sencha Inc.</a><br>
+           Библиотека js-url <a href="https://github.com/websanova/js-url">Websanova</a>
+        </p>
+        <h2>Дополнительная информация</h2>
+        <p>
+           <a href="https://github.com/andreysmyntyna/sc2tvchat">Проект на GitHub</a><br>
+           Автор <a href="https://vk.com/id5544161">в контакте</a><br>
+        </p>
+    </div>
+    <div class="clear"></div>
+</div>
 </body>
 </html>

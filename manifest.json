@@ -63,6 +63,9 @@
     },
     "web_accessible_resources":
     [
+        "images/bg-global-01.08.2012.jpg",
+        "Starcraft Normal.ttf",
+        "960grid.css",
         "images/video_bg.png",
         "popup_menu.js",
         "images/vk16.png",
