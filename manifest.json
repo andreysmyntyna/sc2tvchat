@@ -1,6 +1,6 @@
 {
     "name": "SC2TV чат",
-    "version": "1.0",
+    "version": "1.3",
     "manifest_version": 2,
     "description": "Расширение чата SC2TV для показа перепостов изображений, видео и ссылок на сайты",
     "icons":
