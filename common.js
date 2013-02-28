@@ -37,6 +37,10 @@ function findUrls( text )
     //var regexToken = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
 
     //sc2tv.ru (http://chat.sc2tv.ru/js/chat.js?v=44)
+
+  //Vkontakte url pattern
+  //! urlActiveExp = /([!()?., \n\r\t \u00A0]|^)((https?:\/\/)?((?:[a-z0-9_\-]+\.)+[a-z]{2,6})(\/.*?)?(\#.*?)?)(&nbsp;|[ \t\r\n \u00A0])/i
+
     var regexToken = new RegExp(
         '((?:(?:ftp)|(?:https?))(?:://))' + // протокол (1)
             // URL без протокола (2)

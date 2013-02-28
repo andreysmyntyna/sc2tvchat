@@ -17,8 +17,8 @@
 Ссылки на изображения?<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i>Любая прямая ссылка на изображение,<br> 
 &nbsp;&nbsp;&nbsp;&nbsp;например: https://eu.battle.net/account/local-common/images/logos/blizz-bam.png<br>
-&nbsp;&nbsp;&nbsp;&nbsp;За исключением, когда сервер по прямой ссылке отдаёт не само изображение<br>
-&nbsp;&nbsp;&nbsp;&nbsp;,а страницу предпросмотра.</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;За исключением, когда сервер по прямой ссылке отдаёт не само изображение,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;а страницу предпросмотра.</i><br>
 
 Всё остальное?<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<i>Все остальные ссылки будут показаны "как есть".</i>

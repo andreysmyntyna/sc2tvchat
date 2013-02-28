@@ -26,6 +26,8 @@ var LastMessageTime = undefined;
 var ChatWindow = null;
 var ChatStore = null;
 var ChatView = null;
+var SortTool = null;
+var MessageOrder = 0;
 
 Ext.define('SC2TVCHAT.model.Info',
     {
@@ -35,6 +37,7 @@ Ext.define('SC2TVCHAT.model.Info',
             [
                 {name:"UID", type:'string'},
                 {name:"PublishTime", type:'date', dateFormat:'d-m-Y H:i:s'},
+                {name:"Order", type: 'int'},
                 {name:"Publisher", type:'string'},
                 {name:"URL", type:'string'},
                 {name:"HostName", type:'string'},
@@ -52,7 +55,7 @@ Ext.define('SC2TVCHAT.store.Info',
         sorters :
             [
                 {
-                    property: 'PublishTime',
+                    property: 'Order',
                     direction: 'DESC'
                 }
             ],
@@ -179,25 +182,60 @@ Ext.define("SC2TVCHAT.view.Info",
             comp.x = chat_lt.left + chat_width;
             comp.y = chat_lt.top;
 
+
             comp.addListener('afterrender', function (sender, eOpts)
             {
                 ChatView = comp.queryById("chatview");
                 ChatStore = ChatView.getStore();
+                SortTool = comp.queryById("SortTool");
                 return true;
             });
 
-//            comp.tools =
-//            [
-//                {
-//                    type: 'left',
-//                    itemId: 'left_right',
-//                    qtip: 'тест ссылки',
-//                    handler: function()
-//                    {
-//                        //process_link("http://www.youtube.com/watch?v=QB8b_Q7kreo",{name: "sintix"});
-//                    }
-//                }
-//            ];
+            comp.tools =
+            [
+                {
+                    type: 'plus',
+                    handler: function()
+                    {
+                        process_link("http://www.bilgorod-d.org.ua/test_images/1.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/2.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/3.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/4.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/5.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/6.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/7.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/8.png",{name: "sintix"});
+                        process_link("http://www.bilgorod-d.org.ua/test_images/9.png",{name: "sintix"});
+                    }
+                },
+                {
+                    type: 'down',
+                    itemId: 'SortTool',
+                    tooltipType: 'title',
+                    tooltip: 'список растёт вниз',
+                    handler: function()
+                    {
+                       console.log(ChatStore.sorters.getAt(0));
+                       switch (ChatStore.sorters.getAt(0).direction)
+                       {
+                           default:
+                           case "DESC":
+                               ChatStore.sort({property: 'Order', direction: 'ASC'});
+                               SortTool.setType("up");
+                               console.log(SortTool.getEl().query("img"));
+                               SortTool.getEl().query(">img")[0].setAttribute('title',"список растёт вверх");
+                           break;
+                           case "ASC":
+                               ChatStore.sort({property: 'Order', direction: 'DESC'});
+                               SortTool.setType("down");
+                               SortTool.getEl().query(">img")[0].setAttribute('title',"список растёт вниз");
+                           break;
+                       }
+
+                        //process_link("http://www.youtube.com/watch?v=QB8b_Q7kreo",{name: "sintix"});
+                    }
+                }
+            ];
             comp.callParent();
         }
     });
@@ -236,6 +274,7 @@ function process_link(URL, chat_message)
             UID           : GUID(),
             PublishTime   : DateFormat(new Date(), 'd-m-Y H:i:s'),
             Publisher     : chat_message.name,
+            Order         : MessageOrder++,
             URL           : URL,
             HostName      : hostname,
             Type          : message_type,
