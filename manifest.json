@@ -43,7 +43,7 @@
                 "ext-4.1.1a/resources/css/ext-all-gray.css",
                 "styles.css"
             ],
-            "js":
+            "js" :
             [
                 "js-url.min.js",
                 "common.js",

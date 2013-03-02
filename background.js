@@ -20,7 +20,6 @@ function waitForSC2TV(tabId, changeInfo, tab)
 
    if (hostname == "sc2tv.ru" || hostname == "www.sc2tv.ru")
    {
-        log("sc2tvchat: " + hostname);
         chrome.pageAction.show(tabId);
    }
 }

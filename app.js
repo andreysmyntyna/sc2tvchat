@@ -279,7 +279,7 @@ switch(url("hostname"))
                     {
                         for(index in urls)
                         {
-                            log("sc2tvchat: " + messages[i].name + " >>> " + urls[index]);
+                            log("sc2tvchat:  " + messages[i].name + " >>> " + urls[index]);
                             chrome.extension.sendMessage({action: "new_url", data: {URL: urls[index], message: messages[i]}});
                         }
                     }
