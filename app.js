@@ -14,14 +14,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-var URL_TYPE_IMAGE    = 1;
-var URL_TYPE_VIDEO    = 2;
-var URL_TYPE_WEBSITE  = 3;
-var URL_TYPE_YOUTUBE  = 4;
-var URL_TYPE_TWITCH   = 5;
-var URL_TYPE_VK       = 6;
-var URL_TYPE_YOUTU_BE = 7;
-
 var LastMessageTime = undefined;
 var ChatWindow = null;
 var ChatStore = null;
@@ -95,29 +87,14 @@ var info_tpl = new Ext.XTemplate(
           '</object>',
         '</div>',
       '</tpl>',
-      '<tpl if="this.youtu_be_message(Type)">',
-        '<div class="em_video">',
-          '<img class="em_video" src="chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/video_bg.png">',
-          '<object class="em_video">',
-            '<param name="movie"',
-            'value="https://www.youtube.com/v/{[this.youtube_video_id(values.URL)]}?version=3&autoplay=0"></param>',
-            '<param name="allowScriptAccess" value="always"></param>',
-            '<embed class="em_video" src="https://www.youtube.com/v/{[this.youtu_be_video_id(values.URL)]}?version=3&autoplay=0"',
-            'type="application/x-shockwave-flash" allowscriptaccess="always">',
-            '</embed>',
-          '</object>',
-        '</div>',
-      '</tpl>',
       '<tpl if="this.website_message(Type)">',
         '<span style="font-family:Arial;font-size:9px;width:100%;"><a target="_blank" href="{URL}">{URL}</a></span>',
       '</tpl>',
       '<br style="font-family:Arial;font-size:9px;">',
     '</tpl>',
     {
-        youtube_video_id: function(value){ return url("?v",value);},
-        youtu_be_video_id: function(value) {return url("1", value);},
-        youtube_message: function(Type) {return Type == URL_TYPE_YOUTUBE;},
-        youtu_be_message: function(Type) {return Type == URL_TYPE_YOUTU_BE;},
+        youtube_video_id: function(value){ return value.YoutubeVideoCode();},
+        youtube_message: function(Type) {return Type == URL_TYPE_YOUTUBE_VIDEO;},
         image_message: function(Type) {return Type == URL_TYPE_IMAGE;},
         website_message: function(Type) {return Type == URL_TYPE_WEBSITE;}
     }
@@ -174,14 +151,12 @@ Ext.define("SC2TVCHAT.view.Info",
         {
             var comp = this;
 
-
             var qtabs = $("#block-quicktabs-1");
             var chat_lt = qtabs.offset();
             var chat_width = qtabs.width();
 
             comp.x = chat_lt.left + chat_width;
             comp.y = chat_lt.top;
-
 
             comp.addListener('afterrender', function (sender, eOpts)
             {
@@ -190,6 +165,8 @@ Ext.define("SC2TVCHAT.view.Info",
                 SortTool = comp.queryById("SortTool");
                 return true;
             });
+
+
 
             comp.tools =
             [
@@ -200,12 +177,6 @@ Ext.define("SC2TVCHAT.view.Info",
                         process_link("http://www.bilgorod-d.org.ua/test_images/1.png",{name: "sintix"});
                         process_link("http://www.bilgorod-d.org.ua/test_images/2.png",{name: "sintix"});
                         process_link("http://www.bilgorod-d.org.ua/test_images/3.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/4.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/5.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/6.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/7.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/8.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/9.png",{name: "sintix"});
                     }
                 },
                 {
@@ -215,14 +186,12 @@ Ext.define("SC2TVCHAT.view.Info",
                     tooltip: 'список растёт вниз',
                     handler: function()
                     {
-                       console.log(ChatStore.sorters.getAt(0));
                        switch (ChatStore.sorters.getAt(0).direction)
                        {
                            default:
                            case "DESC":
                                ChatStore.sort({property: 'Order', direction: 'ASC'});
                                SortTool.setType("up");
-                               console.log(SortTool.getEl().query("img"));
                                SortTool.getEl().query(">img")[0].setAttribute('title',"список растёт вверх");
                            break;
                            case "ASC":
@@ -232,7 +201,6 @@ Ext.define("SC2TVCHAT.view.Info",
                            break;
                        }
 
-                        //process_link("http://www.youtube.com/watch?v=QB8b_Q7kreo",{name: "sintix"});
                     }
                 }
             ];
@@ -242,32 +210,8 @@ Ext.define("SC2TVCHAT.view.Info",
 
 function process_link(URL, chat_message)
 {
-    var message_type = URL_TYPE_WEBSITE;
     var title = "";
-    var hostname = url("hostname", URL);
-    var domain = url("domain", URL);
 
-    console.log("process_link : " + "==========================================================================");
-    console.log("process_link : " + url("hostname",URL));
-    console.log("process_link : " + url("1",URL));
-    console.log("process_link : " + url("?v",URL));
-
-    if (IsURLImage(URL))
-    {
-        message_type = URL_TYPE_IMAGE;
-    }
-    else if (domain == "youtube.com")
-    {
-        var v = url('?v', URL);
-        if(v != "")
-        {
-          message_type = URL_TYPE_YOUTUBE;
-        }
-    }
-    else if (domain == "youtu.be")
-    {
-        message_type = URL_TYPE_YOUTU_BE;
-    }
 
     var new_info = Ext.create('SC2TVCHAT.model.Info',
         {
@@ -276,15 +220,15 @@ function process_link(URL, chat_message)
             Publisher     : chat_message.name,
             Order         : MessageOrder++,
             URL           : URL,
-            HostName      : hostname,
-            Type          : message_type,
+            HostName      : URL.HostName(),
+            Type          : URL.ResourceType(),
             Title         : title
         });
 
 
     ChatStore.add(new_info);
 
-    console.log("process_link : " + "==========================================================================");
+    log("process_link : " + "==========================================================================");
 }
 
 function setupChatAjax()
@@ -301,7 +245,7 @@ function setupChatAjax()
         });
 }
 
-console.log(url("hostname"));
+log(url("hostname"));
 
 
 
@@ -330,14 +274,12 @@ switch(url("hostname"))
 
                 if (MessageTime>LastMessageTime)
                 {
-                    var urls = findUrls(unescape(messages[i].message));
+                    var urls = decodeURI(messages[i].message).Links();
                     if(urls.length > 0)
                     {
                         for(index in urls)
                         {
-                            console.log("sc2tvchat: " + messages[i].name + " >>> " + urls[index]);
-
-
+                            log("sc2tvchat: " + messages[i].name + " >>> " + urls[index]);
                             chrome.extension.sendMessage({action: "new_url", data: {URL: urls[index], message: messages[i]}});
                         }
                     }
@@ -357,7 +299,7 @@ switch(url("hostname"))
             {
                 if (request.action == 'new_url')
                 {
-                    console.log("dispatched: " + request.data.URL);
+                    log("dispatched: " + request.data.URL);
                     process_link(request.data.URL, request.data.message);
                 }
             });

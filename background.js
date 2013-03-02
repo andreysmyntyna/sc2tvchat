@@ -20,7 +20,7 @@ function waitForSC2TV(tabId, changeInfo, tab)
 
    if (hostname == "sc2tv.ru" || hostname == "www.sc2tv.ru")
    {
-        console.log("sc2tvchat: " + hostname);
+        log("sc2tvchat: " + hostname);
         chrome.pageAction.show(tabId);
    }
 }
@@ -29,7 +29,7 @@ chrome.tabs.onUpdated.addListener(waitForSC2TV);
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse)
 {
-     console.log("received: " + request.data.URL);
+     log("received: " + request.data.URL);
 
      chrome.tabs.sendRequest(sender.tab.id,
      {

@@ -45,10 +45,10 @@
             ],
             "js":
             [
-                "ext-4.1.1a/ext-all.js",
-                "common.js",
-                "jquery-1.8.3.min.js",
                 "js-url.min.js",
+                "common.js",
+                "ext-4.1.1a/ext-all.js",
+                "jquery-1.8.3.min.js",
                 "app.js"
             ],
             "all_frames" : true

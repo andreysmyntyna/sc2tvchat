@@ -15,6 +15,24 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 /**
+ * Режим работы расширения. Во время разработки - 'development'. Во время публикации - 'production'.
+ *
+ * @global */
+var EXTENSION_MODE = 'development';
+
+
+/**
+ * Обеспечивает функциональность log(), но с учётом режима разработчика или пользователя.
+ * Возможные значения: development, production
+ *
+ * @param {*} info Значение, переданное log()
+ */
+function log(info)
+{
+    EXTENSION_MODE != 'development' || console.log(info);
+}
+
+/**
  * http://stackoverflow.com/questions/4504853/how-do-i-extract-a-url-from-plain-text-using-jquery
  * A utility function to find all URLs - FTP, HTTP(S) and Email - in a text string
  * and return them in an array.  Note, the URLs returned are exactly as found in the text.
@@ -30,28 +48,7 @@ function findUrls( text )
     var url;
     var matchArray;
 
-    // Regular expression to find FTP, HTTP(S) and email URLs.
-    //var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
-
-    //http://rodneyrehm.de/t/url-regex.html
-    //var regexToken = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
-
     //sc2tv.ru (http://chat.sc2tv.ru/js/chat.js?v=44)
-
-  //Vkontakte url pattern
-  //! urlActiveExp = /([!()?., \n\r\t \u00A0]|^)((https?:\/\/)?((?:[a-z0-9_\-]+\.)+[a-z]{2,6})(\/.*?)?(\#.*?)?)(&nbsp;|[ \t\r\n \u00A0])/i
-
-    var regexToken = new RegExp(
-        '((?:(?:ftp)|(?:https?))(?:://))' + // протокол (1)
-            // URL без протокола (2)
-            '(((?:(?:[a-z\u0430-\u0451\\d](?:[a-z\u0430-\u0451\\d-]*[a-z\u0430-\u0451\\d])*)\\.)+(?:[a-z]{2,}|\u0440\u0444)' + // хост (3)
-            '|(?:(?:\\d{1,3}\\.){3}\\d{1,3}))' + // хост в формате IPv4 (3)
-            '(:\\d+)?' + // порт (4)
-            '(/[-a-z\u0430-\u0451\\d%_~\\+\\(\\):]*(?:[\\.,][-a-z\u0430-\u0451\\d%_~\\+\\(\\):]+)*)*' + // путь (5)
-            '(\\?(?:&amp;|[:;a-z\u0430-\u0451\\d%_~\\+=-])*)?' + // параметры (6)
-            '(#(?:&amp;|[:;a-z\u0430-\u0451\\d%_~\\+=-])*)?)' // якорь (7)
-        , 'gi'
-    );
 
 
     // Iterate through any URLs in the text.
@@ -107,10 +104,176 @@ function DateFormat(date, format)
     return result;
 }
 
-/*
- http://stackoverflow.com/questions/9714525/javascript-image-url-verify
+var URL_TYPE_IMAGE    = 1;
+var URL_TYPE_TWITCH_VIDEO    = 2;
+var URL_TYPE_WEBSITE  = 3;
+var URL_TYPE_YOUTUBE_VIDEO  = 4;
+var URL_TYPE_SWF       = 5;
+var URL_TYPE_SC2TV_FORUM_QUOTE = 6;
+var URL_TYPE_SC2TV_FORUM_POST = 7;
+
+
+var URL_REG_EXP = new RegExp(
+    '((?:(?:ftp)|(?:https?))(?:://))' + // протокол (1)
+        // URL без протокола (2)
+        '(((?:(?:[a-z\u0430-\u0451\\d](?:[a-z\u0430-\u0451\\d-]*[a-z\u0430-\u0451\\d])*)\\.)+(?:[a-z]{2,}|\u0440\u0444)' + // хост (3)
+        '|(?:(?:\\d{1,3}\\.){3}\\d{1,3}))' + // хост в формате IPv4 (3)
+        '(:\\d+)?' + // порт (4)
+        '(/[-a-z\u0430-\u0451\\d%_~\\+\\(\\):]*(?:[\\.,][-a-z\u0430-\u0451\\d%_~\\+\\(\\):]+)*)*' + // путь (5)
+        '(\\?(?:&amp;|[:;a-z\u0430-\u0451\\d%_~\\+=-])*)?' + // параметры (6)
+        '(#(?:&amp;|[:;a-z\u0430-\u0451\\d%_~\\+=-])*)?)' // якорь (7)
+    , 'gi'
+);
+
+/**
+* Осуществляет поиск всех вхождений шаблона в строке str
+*
+* @param {String} str Строка в которой будет осуществляться поиск совпадений
+* @returns {Array} Все совпадения с шаблоном в виде массива. Если совпадений необнаружено - массив пуст.
 * */
-function IsURLImage(url)
+RegExp.prototype.Matches = function(str)
 {
-    return(url.match(/\.(jpeg|jpg|gif|png|tif|tiff|pcx|bmp)$/) != null);
-}
+    var result = [];
+    var match = "";
+    while((match = this.exec(str)) != null)  result[result.length] = match[0];
+    return result;
+};
+
+/**
+ * Поиск всех ссылок.
+ *
+ * @returns {Array} Массив с ссылками, найденными в соответствии с шаблоном URL_REG_EXP.
+ */
+String.prototype.Links = function()
+{
+    return URL_REG_EXP.Matches(this);
+};
+
+
+
+
+/**
+ * Даёт ответ на вопрос является ли строка прямой ссылкой на изображение.
+ * Простой вариант, проверяющий просто расширение файла на соответствие расширениям файлов основных графических форматов.
+ *
+ * @returns {Boolean} True - если строка ссылка на изображение, False - в противном случае.
+**/
+String.prototype.DirectImageLink = function()
+{
+    return (/\.(jpeg|jpg|gif|png|tif|tiff|pcx|bmp)$/).test(this);
+};
+
+
+/**
+ * Функция позволяет проверить является ли строка равной одной из перечисленных.
+ * В качестве параметра может принимать массив строк, строку, объект, любое колличество массивов строк,
+ * объектов или строк в любой комбинации.
+ * 
+ * @param {*} strings Строки для сравнения с текущей
+ *
+ * @returns {Boolean} True - если строка равна одной из перечисленных результат - True, во всех остальных случаях - False
+ **/
+String.prototype.OneOf = function(strings) 
+{
+    for(var i =0; i< arguments.length; i++)
+    {
+        switch(typeof(arguments[i]))
+        {
+            default:
+            case "string":
+                if (arguments[i] == this) return true;
+            break;
+            case "object":
+                for(var key in arguments[i])
+                {
+                    if(arguments[i][key] == this) return true;
+                }
+            break;
+        }
+    }
+    return false;
+};
+
+String.prototype.Param = function(param_name)
+{
+    return url('?'+param_name, this);
+};
+
+String.prototype.HasParam = function(param_name)
+{
+    return this.Param(param_name).not("");
+};
+
+String.prototype.UrlPart = function(url_part_number)
+{
+    return url(url_part_number, this);
+};
+
+String.prototype.not = function(str)
+{
+    return this != str;
+};
+
+String.prototype.is = function(str)
+{
+    return this == str;
+};
+
+String.prototype.YoutubeVideoLink = function()
+{
+    return this.Domain().OneOf("youtube.com", "youtu.be") && (this.HasParam("v") || this.UrlPart(1).is("embed"));
+};
+
+String.prototype.YoutubeVideoCode = function()
+{
+    if(this.HasParam("v"))
+    {
+        return this.Param("v");
+    }
+    else if(this.UrlPart(1).is("embed"))
+    {
+        return this.UrlPart(2);
+    }
+    return "";
+};
+
+
+/**
+ * Если строка является правильным URL, функция вернёт доменное имя. Если хост указан IP адресом, то функция вернёт два последних разряда, разделённых точкой.
+ *
+ * @returns {String} Доменное имя ресурса. Результат содержит домен первого уровня.
+ **/
+String.prototype.Domain = function()
+{
+    return url("domain", this);
+};
+
+/**
+ * Если строка является правильным URL, функция вернёт полное доменное имя или IP адрес.
+ *
+ * @returns {String} Полное доменное имя, включая поддомены.
+ **/
+String.prototype.HostName = function()
+{
+    return url("hostname", this);
+};
+
+/**
+ * Если строка является правильным URL, то функция вернёт константу, представляющую один из типов ссылок, поддерживаемых расширением.
+ *
+ * @returns {Number} Значение одной из констант URL_TYPE_*
+ **/
+String.prototype.ResourceType = function()
+{
+
+    if (this.DirectImageLink())
+    {
+        return URL_TYPE_IMAGE;
+    }
+    else if (this.YoutubeVideoLink())
+    {
+        return URL_TYPE_YOUTUBE_VIDEO;
+    }
+
+    return URL_TYPE_WEBSITE;
+};
