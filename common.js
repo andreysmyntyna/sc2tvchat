@@ -61,29 +61,38 @@ function findUrls( text )
     return urlArray;
 }
 
-
-/*
- * http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+/**
+ * Генерирует уникальное значение
+ *
+ * @author <a href="http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript">John Millikin</a>
+ *
+ * @returns {String} Строка вида 9f451369-8283-77e9-f2af-e4ea147cfbbf
  * */
 function GUID ()
 {
     var S4 = function ()
     {
-        return Math.floor(
-            Math.random() * 0x10000 /* 65536 */
-        ).toString(16);
+        return Math.floor( Math.random() * 0x10000 /* 65536 */ ).toString(16);
     };
 
-    return (
-        S4() + S4() + "-" +
-            S4() + "-" +
-            S4() + "-" +
-            S4() + "-" +
-            S4() + S4() + S4()
-        );
+    return S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4();
 }
 
-
+/**
+ * Представляет объект Date строкой.
+ * Синтаксис шаблона:
+ * Y - год, 4-ре цифры
+ * m - месяц, 2-ве цифры
+ * d - день, 2-ве цифры
+ * H - часы, 2-ве цифры
+ * i - минуты, 2-ве цифры
+ * s - секунды, 2-ве цифры
+ *
+ * @param {Date} date объект Date
+ * @param {String} format Шаблон для форматирования
+ *
+ * @returns {String} Строковое представление даты, в соответствии с шаблоном
+ * */
 function DateFormat(date, format)
 {
     var day     = date.getDate();
@@ -104,15 +113,72 @@ function DateFormat(date, format)
     return result;
 }
 
-var URL_TYPE_IMAGE    = 1;
-var URL_TYPE_TWITCH_VIDEO    = 2;
-var URL_TYPE_WEBSITE  = 3;
-var URL_TYPE_YOUTUBE_VIDEO  = 4;
-var URL_TYPE_SWF       = 5;
-var URL_TYPE_SC2TV_FORUM_QUOTE = 6;
-var URL_TYPE_SC2TV_FORUM_POST = 7;
+/**
+ * Прямая ссылка на изображение
+ *
+ * @const */
+const URL_TYPE_IMAGE    = 1;
+/**
+ * Ссылка на видео twitch.tv
+ *
+ * @const */
+const URL_TYPE_TWITCH_VIDEO    = 2;
+/**
+ * Любая ссылка для которой нет специального представления
+ *
+ * @const */
+const URL_TYPE_WEBSITE  = 3;
+/**
+ * Ссылка на видео Youtube.com
+ *
+ * @const */
+const URL_TYPE_YOUTUBE_VIDEO  = 4;
+/**
+ * Прямая ссылка на файл SWF
+ *
+ * @const */
+const URL_TYPE_SWF       = 5;
+/**
+ * Ссылка на отдельный пост форума forum.sc2tv.ru
+ *
+ * @const */
+const URL_TYPE_SC2TV_FORUM_QUOTE = 6;
+/**
+ * Ссылка на ветку форума forum.sc2tv.ru
+ *
+ * @const */
+const URL_TYPE_SC2TV_FORUM_POST = 7;
 
 
+/**
+ * Массив для быстрого перевода констант URL_TYPE_* в представление строкой и наоборот.
+ * Нужен при отладке.
+ *
+ * @global */
+var URL_TYPES = [];
+URL_TYPES["URL_TYPE_IMAGE"] = URL_TYPE_IMAGE;
+URL_TYPES["URL_TYPE_TWITCH_VIDEO"] = URL_TYPE_TWITCH_VIDEO;
+URL_TYPES["URL_TYPE_WEBSITE"] = URL_TYPE_WEBSITE;
+URL_TYPES["URL_TYPE_YOUTUBE_VIDEO"] = URL_TYPE_YOUTUBE_VIDEO;
+URL_TYPES["URL_TYPE_SWF"] = URL_TYPE_SWF;
+URL_TYPES["URL_TYPE_SC2TV_FORUM_QUOTE"] = URL_TYPE_SC2TV_FORUM_QUOTE;
+URL_TYPES["URL_TYPE_SC2TV_FORUM_POST"] = URL_TYPE_SC2TV_FORUM_POST;
+URL_TYPES[URL_TYPE_IMAGE] = "URL_TYPE_IMAGE";
+URL_TYPES[URL_TYPE_TWITCH_VIDEO] = "URL_TYPE_TWITCH_VIDEO";
+URL_TYPES[URL_TYPE_WEBSITE] = "URL_TYPE_WEBSITE";
+URL_TYPES[URL_TYPE_YOUTUBE_VIDEO] = "URL_TYPE_YOUTUBE_VIDEO";
+URL_TYPES[URL_TYPE_SWF] = "URL_TYPE_SWF";
+URL_TYPES[URL_TYPE_SC2TV_FORUM_QUOTE] = "URL_TYPE_SC2TV_FORUM_QUOTE";
+URL_TYPES[URL_TYPE_SC2TV_FORUM_POST] = "URL_TYPE_SC2TV_FORUM_POST";
+
+
+
+
+/**
+ * Регулярное выражение, представляющее шаблон для обнаружения URL в строке.
+ * Обнаружено в файле http://chat.sc2tv.ru/js/chat.js?v=44
+ *
+ * @global */
 var URL_REG_EXP = new RegExp(
     '((?:(?:ftp)|(?:https?))(?:://))' + // протокол (1)
         // URL без протокола (2)
@@ -134,7 +200,7 @@ var URL_REG_EXP = new RegExp(
 RegExp.prototype.Matches = function(str)
 {
     var result = [];
-    var match = "";
+    var match = null;
     while((match = this.exec(str)) != null)  result[result.length] = match[0];
     return result;
 };
@@ -148,9 +214,6 @@ String.prototype.Links = function()
 {
     return URL_REG_EXP.Matches(this);
 };
-
-
-
 
 /**
  * Даёт ответ на вопрос является ли строка прямой ссылкой на изображение.
@@ -194,36 +257,119 @@ String.prototype.OneOf = function(strings)
     return false;
 };
 
+
+/**
+ * Получает значение параметра из URL по его имени
+ *
+ * @param {String} param_name Имя параметра из ссылки http://ru.wikipedia.org/wiki/Special:Search?search=github&go=Go можно получить значения параметров "search" и "go"
+ *
+ * @returns {String} Если параметр, имя которого указано в параметре param_name существует будет получено его значение, в противном случае пустая строка
+ **/
 String.prototype.Param = function(param_name)
 {
     return url('?'+param_name, this);
 };
 
+
+/**
+ * Проверка на существование именованного параметра. Однозначно существование параметра функция определить не может. Если его нет в ссылке или параметр имеет пустое значение будет возвращена пустая строка.
+ *
+ * @param {String} param_name Имя параметра
+ *
+ * @returns {String} Пустая строка или значение параметра.
+ **/
 String.prototype.HasParam = function(param_name)
 {
-    return this.Param(param_name).not("");
+    return this.Param(param_name).Empty();
 };
 
+/**
+ * Возвращает часть пути в ссылке по его номеру. Из следующей ссылки могут быть получены значения 1 - wiki, 2 - Special:Search http://ru.wikipedia.org/wiki/Special:Search?search=github&go=Go
+ *
+ * @param {Number} url_part_number Номер части URL
+ *
+ * @returns {String} Пустая строка или соответствующее значение.
+ **/
 String.prototype.UrlPart = function(url_part_number)
 {
     return url(url_part_number, this);
 };
 
+/**
+ * Проверяет неравенство строк
+ *
+ * @param {String} str Строка для сравнения с текущей
+ *
+ * @returns {Boolean} True - строки неравны, False - равны
+ **/
 String.prototype.not = function(str)
 {
     return this != str;
 };
 
+/**
+ * Проверяет неравенство строк
+ *
+ * @param {String} str Строка для сравнения с текущей
+ *
+ * @returns {Boolean} True - строки неравны, False - равны
+ **/
 String.prototype.is = function(str)
 {
     return this == str;
 };
 
-String.prototype.YoutubeVideoLink = function()
+/**
+ * Проверяет пустая ли строка
+ *
+ * @returns {Boolean} True - строка пуста, False - равны
+ **/
+String.prototype.Empty = function()
 {
-    return this.Domain().OneOf("youtube.com", "youtu.be") && (this.HasParam("v") || this.UrlPart(1).is("embed"));
+    return this.length > 0;
 };
 
+/**
+ * Проверяет является ли строка ссылкой на видео Youtube
+ * URL может иметь следующий вид:
+ * 1. http://www.youtube.com/watch?v=XYqZCHsgLVA
+ * 2. http://youtu.be/XYqZCHsgLVA
+ * 3. http://www.youtube.com/embed/XYqZCHsgLVA
+ *
+ * @returns {Boolean} True - ссылка на видео, False - нет
+ **/
+String.prototype.YoutubeVideoLink = function()
+{
+    return (this.Domain().is("youtube.com") && (this.HasParam("v") || this.UrlPart(1).is("embed")))
+        || this.Domain().is("youtu.be");
+};
+
+
+String.prototype.TwitchVideoLink = function()
+{
+    return this.Domain().is("twitch.tv");
+};
+
+String.prototype.TwitchVideoChannel = function()
+{
+
+};
+
+String.prototype.TwitchVideoChapter = function()
+{
+
+};
+
+
+/**
+ * Возвращает код видео из ссылки на Youtube
+ * URL может иметь следующий вид:
+ * 1. http://www.youtube.com/watch?v=XYqZCHsgLVA
+ * 2. http://youtu.be/XYqZCHsgLVA
+ * 3. http://www.youtube.com/embed/XYqZCHsgLVA
+ *
+ * @returns {String} Код ссылки или пуста строка
+ **/
 String.prototype.YoutubeVideoCode = function()
 {
     if(this.HasParam("v"))
@@ -236,6 +382,7 @@ String.prototype.YoutubeVideoCode = function()
     }
     return "";
 };
+
 
 
 /**

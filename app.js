@@ -63,9 +63,6 @@ Ext.define('SC2TVCHAT.store.Info',
     });
 
 
-//вставка youtube видео с помощью iframe
-//'<iframe width="100%" height="100%" frameborder="0" src="http://www.youtube.com/embed/{[this.youtube_video_id(values.URL)]}" allowfullscreen=""></iframe>',
-
 var info_tpl = new Ext.XTemplate(
     '<tpl for=".">',
       '<span style="font-family:Arial;font-size:9px;"><a style="color:green;" target="_blank" href="http://sc2tv.ru/users/{Publisher}">{Publisher}</a></span>',
@@ -176,7 +173,8 @@ Ext.define("SC2TVCHAT.view.Info",
                     {
                         process_link("http://www.bilgorod-d.org.ua/test_images/1.png",{name: "sintix"});
                         process_link("http://www.bilgorod-d.org.ua/test_images/2.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/3.png",{name: "sintix"});
+                        process_link("http://www.youtube.com/watch?v=dCqZCHsgLVA", {name: "sintix"});
+                        process_link("http://news.mail.ru/inworld/ukraina/global/112/politics/12185317/?frommail=1", {name: "sintix"});
                     }
                 },
                 {
@@ -210,9 +208,6 @@ Ext.define("SC2TVCHAT.view.Info",
 
 function process_link(URL, chat_message)
 {
-    var title = "";
-
-
     var new_info = Ext.create('SC2TVCHAT.model.Info',
         {
             UID           : GUID(),
@@ -222,7 +217,7 @@ function process_link(URL, chat_message)
             URL           : URL,
             HostName      : URL.HostName(),
             Type          : URL.ResourceType(),
-            Title         : title
+            Title         : ""
         });
 
 
@@ -246,8 +241,6 @@ function setupChatAjax()
 }
 
 log(url("hostname"));
-
-
 
 switch(url("hostname"))
 {
@@ -274,15 +267,11 @@ switch(url("hostname"))
 
                 if (MessageTime>LastMessageTime)
                 {
-                    var urls = decodeURI(messages[i].message).Links();
-                    if(urls.length > 0)
+                    var urls = messages[i].message.Links();
+                    urls.forEach(function(element, index, array)
                     {
-                        for(index in urls)
-                        {
-                            log("sc2tvchat:  " + messages[i].name + " >>> " + urls[index]);
-                            chrome.extension.sendMessage({action: "new_url", data: {URL: urls[index], message: messages[i]}});
-                        }
-                    }
+                        chrome.extension.sendMessage({action: "new_url", data: {URL: element, message: messages[i]}});
+                    });
                 }
             }
 
@@ -297,9 +286,9 @@ switch(url("hostname"))
 
             chrome.extension.onRequest.addListener(function (request, sender, callback)
             {
-                if (request.action == 'new_url')
+                if (request.action.is("new_url"))
                 {
-                    log("dispatched: " + request.data.URL);
+                    log("sc2tvchat:  " + request.data.message.name + " >>> " + request.data.URL);
                     process_link(request.data.URL, request.data.message);
                 }
             });
@@ -309,4 +298,3 @@ switch(url("hostname"))
         });
 
 }
-

@@ -16,20 +16,13 @@
 
 function waitForSC2TV(tabId, changeInfo, tab)
 {
-   var hostname = url("hostname",tab.url);
-
-   if (hostname == "sc2tv.ru" || hostname == "www.sc2tv.ru")
-   {
-        chrome.pageAction.show(tabId);
-   }
+    !tab.url.HostName().OneOf("sc2tv.ru","www.sc2tv.ru") || chrome.pageAction.show(tabId);
 }
 
 chrome.tabs.onUpdated.addListener(waitForSC2TV);
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse)
 {
-     log("received: " + request.data.URL);
-
      chrome.tabs.sendRequest(sender.tab.id,
      {
        action: request.action,
