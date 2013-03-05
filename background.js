@@ -14,12 +14,8 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-function waitForSC2TV(tabId, changeInfo, tab)
-{
-    !tab.url.HostName().OneOf("sc2tv.ru","www.sc2tv.ru") || chrome.pageAction.show(tabId);
-}
 
-chrome.tabs.onUpdated.addListener(waitForSC2TV);
+SphereOfActivity(["sc2tv.ru","www.sc2tv.ru"]);
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse)
 {

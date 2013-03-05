@@ -59,7 +59,7 @@
     "background_page": "background.html",
     "background":
     {
-        "scripts": ["js-url.min.js","common.js","background.js"]
+        "scripts": ["js-url.min.js","common.js","chrome.js","background.js"]
     },
     "web_accessible_resources":
     [
