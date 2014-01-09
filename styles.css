@@ -34,22 +34,22 @@ body
 
 .chat-window-icon
 {
-    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/icon16.png') !important;
+    background-image: url('chrome-extension://facneciafohbgoldcbpnnoiiolejjlee/images/icon16.png') !important;
 }
 
 .tl-menu-icon
 {
-    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/tl_favicon.ico') !important;
+    background-image: url('chrome-extension://facneciafohbgoldcbpnnoiiolejjlee/images/tl_favicon.ico') !important;
 }
 
 .vk-menu-icon
 {
-    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/vk16.png') !important;
+    background-image: url('chrome-extension://facneciafohbgoldcbpnnoiiolejjlee/images/vk16.png') !important;
 }
 
 .chat_plus-menu-icon
 {
-    background-image: url('chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/icon16.png') !important;
+    background-image: url('chrome-extension://facneciafohbgoldcbpnnoiiolejjlee/images/icon16.png') !important;
 }
 
 /* Правила *.em_video - хак для правильного масштабирования встроенного видео при изменении размеров окна просмотра*/

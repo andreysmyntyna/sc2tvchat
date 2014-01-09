@@ -79,7 +79,7 @@ var info_tpl = new Ext.XTemplate(
       '</tpl>',
       '<tpl if="this.youtube_message(Type)">',
         '<div class="em_video">',
-          '<img class="em_video" src="chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/video_bg.png">',
+          '<img class="em_video" src="chrome-extension://facneciafohbgoldcbpnnoiiolejjlee/images/video_bg.png">',
           '<object class="em_video">',
             '<param name="movie"',
             'value="https://www.youtube.com/v/{[this.youtube_video_id(values.URL)]}?version=3&autoplay=0"></param>',
@@ -173,6 +173,7 @@ Ext.define("SC2TVCHAT.view.Info",
             [
                 {
                     type: 'plus',
+                    hidden: true,
                     handler: function()
                     {
                         process_link("http://www.kinopoisk.ru/film/278522/",{name: "sintix"});
