@@ -148,6 +148,12 @@ const URL_TYPE_SC2TV_FORUM_QUOTE = 6;
  *
  * @const */
 const URL_TYPE_SC2TV_FORUM_POST = 7;
+/**
+ * Ссылка на описание фильма kinopoisk.ru
+ *
+ * @const */
+const URL_TYPE_KINOPOISK_RU = 8;
+
 
 
 /**
@@ -163,6 +169,7 @@ URL_TYPES["URL_TYPE_YOUTUBE_VIDEO"] = URL_TYPE_YOUTUBE_VIDEO;
 URL_TYPES["URL_TYPE_SWF"] = URL_TYPE_SWF;
 URL_TYPES["URL_TYPE_SC2TV_FORUM_QUOTE"] = URL_TYPE_SC2TV_FORUM_QUOTE;
 URL_TYPES["URL_TYPE_SC2TV_FORUM_POST"] = URL_TYPE_SC2TV_FORUM_POST;
+URL_TYPES["URL_TYPE_KINOPOISK_RU"] = URL_TYPE_KINOPOISK_RU;
 URL_TYPES[URL_TYPE_IMAGE] = "URL_TYPE_IMAGE";
 URL_TYPES[URL_TYPE_TWITCH_VIDEO] = "URL_TYPE_TWITCH_VIDEO";
 URL_TYPES[URL_TYPE_WEBSITE] = "URL_TYPE_WEBSITE";
@@ -170,7 +177,7 @@ URL_TYPES[URL_TYPE_YOUTUBE_VIDEO] = "URL_TYPE_YOUTUBE_VIDEO";
 URL_TYPES[URL_TYPE_SWF] = "URL_TYPE_SWF";
 URL_TYPES[URL_TYPE_SC2TV_FORUM_QUOTE] = "URL_TYPE_SC2TV_FORUM_QUOTE";
 URL_TYPES[URL_TYPE_SC2TV_FORUM_POST] = "URL_TYPE_SC2TV_FORUM_POST";
-
+URL_TYPES[URL_TYPE_KINOPOISK_RU] = "URL_TYPE_KINOPOISK_RU";
 
 
 
@@ -226,6 +233,43 @@ String.prototype.DirectImageLink = function()
     return (/\.(jpeg|jpg|gif|png|tif|tiff|pcx|bmp)$/).test(this);
 };
 
+
+String.prototype.KinopoiskLink = function() {
+    return (/kinopoisk\.ru\/film\/\d+/).test(this);
+};
+
+String.prototype.getKinopoiskUrlData = function() {
+    var kinopoiskData = $.Deferred();
+
+    var kinopoiskRequest = {
+        type: "GET",
+        crossDomain: true,
+        url: this,
+        dataType: 'text'
+    };
+
+    $.ajax(kinopoiskRequest).success(function(data) {
+        var $dom = $(data);
+        var $description = $dom.find('.brand_words[itemprop="description"]');
+        var $previewImage = $dom.find('#photoBlock img[itemprop="image"]');
+
+        var posterDescription = $description.text();
+        var posterSrc = $previewImage.get(0).src;
+        var posterAlt = $previewImage.attr('alt') || '';
+
+        var success = true;
+        kinopoiskData.resolveWith(window, [success, posterAlt, posterSrc, posterDescription]);
+    }).error(function() {
+        var success = false;
+        kinopoiskData.resolveWith(window, [success, '', '', '']);
+    });
+
+    $.ajax(kinopoiskRequest).success(function(data) {
+            console.log($(data).find('.brand_words[itemprop="description"]').text());
+    });
+
+    return kinopoiskData.promise();
+};
 
 /**
  * Функция позволяет проверить является ли строка равной одной из перечисленных.
@@ -420,6 +464,9 @@ String.prototype.ResourceType = function()
     else if (this.YoutubeVideoLink())
     {
         return URL_TYPE_YOUTUBE_VIDEO;
+    }
+    else if (this.KinopoiskLink()) {
+        return URL_TYPE_KINOPOISK_RU;
     }
 
     return URL_TYPE_WEBSITE;

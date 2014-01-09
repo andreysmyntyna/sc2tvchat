@@ -18,7 +18,6 @@ var LastMessageTime = undefined;
 var ChatWindow = null;
 var ChatStore = null;
 var ChatView = null;
-var SortTool = null;
 var MessageOrder = 0;
 
 Ext.define('SC2TVCHAT.model.Info',
@@ -34,7 +33,11 @@ Ext.define('SC2TVCHAT.model.Info',
                 {name:"URL", type:'string'},
                 {name:"HostName", type:'string'},
                 {name:"Type", type:'int'},
-                {name:"Title", type:'string'}
+                {name:"Title", type:'string'},
+                //Kinopoisk
+                {name:"posterAlt", type:'string'},
+                {name:"posterSrc", type:'string'},
+                {name:"posterDescription", type:'string'}
             ]
     });
 
@@ -71,6 +74,9 @@ var info_tpl = new Ext.XTemplate(
       '<tpl if="this.image_message(Type)">',
         '<img style="width:100%;" src="{URL}">',
       '</tpl>',
+      '<tpl if="this.kinopoisk_message(Type)">',
+        '<img style="width:100%;" src="{posterSrc:htmlEncode}" title="{posterAlt:htmlEncode}\n{posterDescription:htmlEncode}" alt="{posterAlt:htmlEncode}\n{posterDescription:htmlEncode}">',
+      '</tpl>',
       '<tpl if="this.youtube_message(Type)">',
         '<div class="em_video">',
           '<img class="em_video" src="chrome-extension://lkokikgnelnemnafdjcdgnfogibfbbgg/images/video_bg.png">',
@@ -93,7 +99,8 @@ var info_tpl = new Ext.XTemplate(
         youtube_video_id: function(value){ return value.YoutubeVideoCode();},
         youtube_message: function(Type) {return Type == URL_TYPE_YOUTUBE_VIDEO;},
         image_message: function(Type) {return Type == URL_TYPE_IMAGE;},
-        website_message: function(Type) {return Type == URL_TYPE_WEBSITE;}
+        website_message: function(Type) {return Type == URL_TYPE_WEBSITE;},
+        kinopoisk_message: function(Type) {return Type == URL_TYPE_KINOPOISK_RU;}
     }
 );
 
@@ -159,11 +166,8 @@ Ext.define("SC2TVCHAT.view.Info",
             {
                 ChatView = comp.queryById("chatview");
                 ChatStore = ChatView.getStore();
-                SortTool = comp.queryById("SortTool");
                 return true;
             });
-
-
 
             comp.tools =
             [
@@ -171,34 +175,8 @@ Ext.define("SC2TVCHAT.view.Info",
                     type: 'plus',
                     handler: function()
                     {
-                        process_link("http://www.bilgorod-d.org.ua/test_images/1.png",{name: "sintix"});
-                        process_link("http://www.bilgorod-d.org.ua/test_images/2.png",{name: "sintix"});
-                        process_link("http://www.youtube.com/watch?v=dCqZCHsgLVA", {name: "sintix"});
-                        process_link("http://news.mail.ru/inworld/ukraina/global/112/politics/12185317/?frommail=1", {name: "sintix"});
-                    }
-                },
-                {
-                    type: 'down',
-                    itemId: 'SortTool',
-                    tooltipType: 'title',
-                    tooltip: 'список растёт вниз',
-                    handler: function()
-                    {
-                       switch (ChatStore.sorters.getAt(0).direction)
-                       {
-                           default:
-                           case "DESC":
-                               ChatStore.sort({property: 'Order', direction: 'ASC'});
-                               SortTool.setType("up");
-                               SortTool.getEl().query(">img")[0].setAttribute('title',"список растёт вверх");
-                           break;
-                           case "ASC":
-                               ChatStore.sort({property: 'Order', direction: 'DESC'});
-                               SortTool.setType("down");
-                               SortTool.getEl().query(">img")[0].setAttribute('title',"список растёт вниз");
-                           break;
-                       }
-
+                        process_link("http://www.kinopoisk.ru/film/278522/",{name: "sintix"});
+                        process_link("http://www.kinopoisk.ru/film/462682/",{name: "sintix"});
                     }
                 }
             ];
@@ -210,18 +188,35 @@ function process_link(URL, chat_message)
 {
     var new_info = Ext.create('SC2TVCHAT.model.Info',
         {
-            UID           : GUID(),
-            PublishTime   : DateFormat(new Date(), 'd-m-Y H:i:s'),
-            Publisher     : chat_message.name,
-            Order         : MessageOrder++,
-            URL           : URL,
-            HostName      : URL.HostName(),
-            Type          : URL.ResourceType(),
-            Title         : ""
+            UID               : GUID(),
+            PublishTime       : DateFormat(new Date(), 'd-m-Y H:i:s'),
+            Publisher         : chat_message.name,
+            Order             : MessageOrder++,
+            URL               : URL,
+            HostName          : URL.HostName(),
+            Type              : URL.ResourceType(),
+            Title             : "",
+            posterAlt         : "",
+            posterSrc         : "",
+            posterDescription : ""
         });
 
-
-    ChatStore.add(new_info);
+    if(new_info.data.Type == URL_TYPE_KINOPOISK_RU) {
+        $.when(URL.getKinopoiskUrlData()).then(function(success, posterAlt, posterSrc, posterDescription) {
+            log("getKinopoiskUrlData : ");
+            log(arguments);
+            if(success) {
+                new_info.set('posterAlt', posterAlt);
+                new_info.set('posterSrc', posterSrc);
+                new_info.set('posterDescription', posterDescription);
+            } else {
+                new_info.set("Type", URL_TYPE_WEBSITE);
+            }
+            ChatStore.add(new_info);
+        });
+    } else {
+        ChatStore.add(new_info);
+    }
 
     log("process_link : " + "==========================================================================");
 }
