@@ -18,7 +18,7 @@
  * Режим работы расширения. Во время разработки - 'development'. Во время публикации - 'production'.
  *
  * @global */
-var EXTENSION_MODE = 'development';
+var EXTENSION_MODE = 'production';
 
 
 /**
@@ -252,16 +252,33 @@ String.prototype.getKinopoiskUrlData = function() {
         var $dom = $(data);
         var $description = $dom.find('.brand_words[itemprop="description"]');
         var $previewImage = $dom.find('#photoBlock img[itemprop="image"]');
+        var $posterAwaiting = $dom.find('#await_percent');
+        var $posterYear = $dom.find('#infoTable .info tr:first-child td:nth-child(2)');
+        var $posterVotes = $dom.find('#block_rating [itemprop="ratingValue"]');
+        var $posterIMDb = $dom.find('#block_rating .div1+div:contains("IMDb")');
 
         var posterDescription = $description.text();
         var posterSrc = $previewImage.get(0).src;
         var posterAlt = $previewImage.attr('alt') || '';
 
+        var posterAwaiting = (function() {
+            var percent = parseInt($posterAwaiting.text());
+            if(isNaN(percent)) percent = '';
+            return percent;
+        })();
+        var posterYear = $posterYear.text().trim();
+        var posterVotes = $posterVotes.attr('content') || '';
+        var posterIMDb = (function() {
+            var imdb = parseFloat((/\s\d+\.\d+\s/ig).Matches($posterIMDb.text())[0]);
+            if(isNaN(imdb)) imdb = '';
+            return imdb;
+        })();
+
         var success = true;
-        kinopoiskData.resolveWith(window, [success, posterAlt, posterSrc, posterDescription]);
+        kinopoiskData.resolveWith(window, [success, posterAlt, posterSrc, posterDescription, posterAwaiting, posterYear, posterVotes, posterIMDb]);
     }).error(function() {
         var success = false;
-        kinopoiskData.resolveWith(window, [success, '', '', '']);
+        kinopoiskData.resolveWith(window, [success, '', '', '', '', '', '', '']);
     });
 
     $.ajax(kinopoiskRequest).success(function(data) {

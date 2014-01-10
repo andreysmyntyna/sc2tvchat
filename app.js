@@ -37,7 +37,11 @@ Ext.define('SC2TVCHAT.model.Info',
                 //Kinopoisk
                 {name:"posterAlt", type:'string'},
                 {name:"posterSrc", type:'string'},
-                {name:"posterDescription", type:'string'}
+                {name:"posterDescription", type:'string'},
+                {name:"posterAwaiting", type:'string'},
+                {name:"posterYear", type:'string'},
+                {name:"posterVotes", type:'string'},
+                {name:"posterIMDb", type:'string'}
             ]
     });
 
@@ -76,6 +80,16 @@ var info_tpl = new Ext.XTemplate(
       '</tpl>',
       '<tpl if="this.kinopoisk_message(Type)">',
         '<img style="width:100%;" src="{posterSrc:htmlEncode}" title="{posterAlt:htmlEncode}\n{posterDescription:htmlEncode}" alt="{posterAlt:htmlEncode}\n{posterDescription:htmlEncode}">',
+        '<span style="font-family:Arial;font-size:12px;font-weight:bold;display: inline-block;margin-top: 5px;margin-bottom: 5px;width: 100%; overflow: hidden;">{posterAlt}</span>',
+        '<div style="text-align:center;">',
+            '<tpl if="this.kinopoisk_awaiting(values)">',
+                '<span style="font-family:Arial;font-size:12px;font-weight:normal;margin-top: 5px;margin-bottom: 5px;color:#5b9507;">Ожидания:&nbsp;{posterAwaiting}%</span>',
+            '<tpl else>',
+                '<span style="font-family:Arial;font-size:12px;font-weight:normal;margin-top: 5px;margin-bottom: 5px;color:#ff6600;">{posterYear}</span>&nbsp;/&nbsp;',
+                '<span style="font-family:Arial;font-size:12px;font-weight:normal;margin-top: 5px;margin-bottom: 5px;color:#578bb7;">КП:&nbsp;{posterVotes}</span>&nbsp;/&nbsp;',
+                '<span style="font-family:Arial;font-size:12px;font-weight:normal;margin-top: 5px;margin-bottom: 5px;color:#5b9507;">IMDb:&nbsp;{posterIMDb}</span>',
+            '</tpl>',
+        '</div>',
       '</tpl>',
       '<tpl if="this.youtube_message(Type)">',
         '<div class="em_video">',
@@ -100,7 +114,8 @@ var info_tpl = new Ext.XTemplate(
         youtube_message: function(Type) {return Type == URL_TYPE_YOUTUBE_VIDEO;},
         image_message: function(Type) {return Type == URL_TYPE_IMAGE;},
         website_message: function(Type) {return Type == URL_TYPE_WEBSITE;},
-        kinopoisk_message: function(Type) {return Type == URL_TYPE_KINOPOISK_RU;}
+        kinopoisk_message: function(Type) {return Type == URL_TYPE_KINOPOISK_RU;},
+        kinopoisk_awaiting: function(values) {return values.posterAwaiting != '';}
     }
 );
 
@@ -173,11 +188,12 @@ Ext.define("SC2TVCHAT.view.Info",
             [
                 {
                     type: 'plus',
-                    hidden: true,
+                    hidden: EXTENSION_MODE != 'development',
                     handler: function()
                     {
                         process_link("http://www.kinopoisk.ru/film/278522/",{name: "sintix"});
-                        process_link("http://www.kinopoisk.ru/film/462682/",{name: "sintix"});
+//                        process_link("http://www.kinopoisk.ru/film/462682/",{name: "sintix"});
+                        process_link("http://www.kinopoisk.ru/film/714888/",{name: "sintix"});
                     }
                 }
             ];
@@ -199,17 +215,25 @@ function process_link(URL, chat_message)
             Title             : "",
             posterAlt         : "",
             posterSrc         : "",
-            posterDescription : ""
+            posterDescription : "",
+            posterAwaiting    : "",
+            posterYear        : "",
+            posterVotes       : "",
+            posterIMDb        : ""
         });
 
     if(new_info.data.Type == URL_TYPE_KINOPOISK_RU) {
-        $.when(URL.getKinopoiskUrlData()).then(function(success, posterAlt, posterSrc, posterDescription) {
+        $.when(URL.getKinopoiskUrlData()).then(function(success, posterAlt, posterSrc, posterDescription, posterAwaiting, posterYear, posterVotes, posterIMDb) {
             log("getKinopoiskUrlData : ");
             log(arguments);
             if(success) {
                 new_info.set('posterAlt', posterAlt);
                 new_info.set('posterSrc', posterSrc);
                 new_info.set('posterDescription', posterDescription);
+                new_info.set('posterAwaiting', posterAwaiting);
+                new_info.set('posterYear', posterYear);
+                new_info.set('posterVotes', posterVotes);
+                new_info.set('posterIMDb', posterIMDb);
             } else {
                 new_info.set("Type", URL_TYPE_WEBSITE);
             }
